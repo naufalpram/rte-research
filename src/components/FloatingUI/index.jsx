@@ -25,29 +25,45 @@ import {
 
   const selectionOnlyMenuId = ['bold-italic', 'dashes-between']
   
-  export const MenuItem = forwardRef(({ id, label, disabled, quillRef, ...props }, ref) => {
-    const selection = quillRef.current.getSelection();
-    const currentFormat = quillRef.current.getFormat(selection?.index, selection?.length);
-    
-    const isBoldItalic = (format) => Object.keys(format).includes('bold') && Object.keys(format).includes('italic');
-    const textColor = !disabled ? isBoldItalic(currentFormat) && id === 'bold-italic' ? 'text-blue-500' : undefined : 'text-[#ddd]';
-    const menuVisibility = (!selection || selection?.length === 0) && selectionOnlyMenuId.includes(id) ? 'hidden' : 'block';
-    return (
-      <button
-        {...props}
-        className={`w-full p-1 bg-white border-none rounded-[4px] text-base text-left m-0 outline-none focus:bg-gray-300 
-            ${textColor} ${menuVisibility}
-        `}
-        ref={ref}
-        role="menuitem"
-        disabled={disabled}
-      >
-        {label}
-      </button>
-    );
+  export const MenuItem = forwardRef(({ id, label, disabled, quillRef = null, editorRef = null, ...props }, ref) => {
+    if (quillRef) {
+      const selection = quillRef.current.getSelection();
+      const currentFormat = quillRef.current.getFormat(selection?.index, selection?.length);
+      
+      const isBoldItalic = (format) => Object.keys(format).includes('bold') && Object.keys(format).includes('italic');
+      const textColor = !disabled ? isBoldItalic(currentFormat) && id === 'bold-italic' ? 'text-blue-500' : undefined : 'text-[#ddd]';
+      const menuVisibility = (!selection || selection?.length === 0) && selectionOnlyMenuId.includes(id) ? 'hidden' : 'block';
+      return (
+        <button
+          {...props}
+          className={`w-full p-1 bg-white border-none rounded-[4px] text-base text-left m-0 outline-none focus:bg-gray-300 
+              ${textColor} ${menuVisibility}
+          `}
+          ref={ref}
+          role="menuitem"
+          disabled={disabled}
+        >
+          {label}
+        </button>
+      );
+    }
+    else if (editorRef) {
+      return (
+        <button
+          {...props}
+          className={`w-full p-1 bg-white border-none rounded-[4px] text-base text-left m-0 outline-none focus:bg-gray-300 
+          `}
+          ref={ref}
+          role="menuitem"
+          disabled={disabled}
+        >
+          {label}
+        </button>
+      )
+    }
   });
   
-  export const Menu = forwardRef(({ children, quillRef }) => {
+  export const Menu = forwardRef(({ children, quillRef, editorRef }) => {
     const [activeIndex, setActiveIndex] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
   
@@ -170,7 +186,8 @@ import {
                           child.props.onClick?.();
                           setIsOpen(false);
                         },
-                        quillRef
+                        quillRef,
+                        editorRef
                       })
                     )
                 )}
