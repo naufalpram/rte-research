@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import QuillEditor from '../components/Quill';
 import { Delta } from 'quill/core';
 import { Menu, MenuItem } from '../components/FloatingUI'
+import { convertToMarkup } from '../helper/convert';
 
 const App = () => {
   const [range, setRange] = useState();
@@ -16,8 +17,6 @@ const App = () => {
 
     const { index, length } = quillRef.current.getSelection()
     if (index === -1) return;
-    
-    console.log(index, length);
 
     const currentFormat = quillRef.current.getFormat(index, length);
 
@@ -33,7 +32,7 @@ const App = () => {
 
     // Reformat the text with dashes
     const text = quillRef.current.getText(index, length);
-    const updatedText = text.split('').join('-');
+    const updatedText = text.trim().replace(/\s/g, "").split('').join('-');
     // Get current format that will be applied to updated text
     const currentFormat = quillRef.current.getFormat(index, updatedText.length);
 
@@ -66,17 +65,16 @@ const App = () => {
           ref={quillRef}
           readOnly={readOnly}
           defaultValue={new Delta()
-            .insert('Hello')
-            .insert('\n', { header: 1 })
+            .insert('Hello\n', { header: 1 })
             .insert('Some ')
-            .insert('initial', { bold: true })
+            .insert('initial\n', { bold: true })
             .insert(' ')
             .insert('content', { underline: true })
             .insert('\n')}
           onSelectionChange={setRange}
           onTextChange={setLastChange}
         />
-        <div className="flex border border-[#ccc] p-3">
+        <div className="flex border border-[#ccc] justify-between p-3">
           <label>
             Read Only:{' '}
             <input
@@ -86,13 +84,14 @@ const App = () => {
             />
           </label>
           <button
-            className="ml-auto"
+            className="px-4 py-2 font-semibold text-sm text-emerald-600 bg-transparent border-1 border-emerald-600 transition-all hover:text-white hover:bg-emerald-600 rounded"
             type="button"
             onClick={() => {
-              console.log('clicked');
+                const length = quillRef.current.getLength();
+                alert(quillRef.current.getSemanticHTML(0, length));
             }}
           >
-            Click
+            Send
           </button>
         </div>
         <div className="mx-3 my-0">
