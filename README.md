@@ -1,8 +1,9 @@
-# React + Vite
+# Rich Text Editor with Custom Context Menu Research
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### This research was made to research possible Rich Text Editor libraries that can be integrated with Custom Context Menu
+---
+**Libraries used in this research are:**
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [*Quill* - Rich Text Editor](https://quilljs.com/docs/quickstart)
+- [*Editor.js* - Rich Text Editor ](https://editorjs.io/base-concepts/)
+- [*Floating UI* - Floating Element Library](https://floating-ui.com/docs/getting-started)
